@@ -32,17 +32,13 @@ class SVGPlane(Plane):
                                    stroke=color_to_str(color))
         self._dwg.add(scircle)
 
-    def draw_point(self, point, color):
-        srect = self._dwg.rect(insert=self._scale(point.topair()),
-                               size=(2*mm, 2*mm),
-                               fill=color_to_str(color))
-        self._dwg.add(srect)
 
-
-    # start and end are normalized angles on the unit interval
+    # start and extent are normalized angles on the unit interval
     # moving in an anticlockwise direction
-    def draw_arc(self, center, radius, start, end, color):
-        ordered = [start % 1.0, end % 1.0]
+    def draw_circle_arc(self, circle, start, extent, color):
+        start %= 1.0
+        end = (start + extent) % 1.0
+        ordered = [start, end]
         ordered.sort()
         is_large = 0
         is_sweep = 0
@@ -60,17 +56,17 @@ class SVGPlane(Plane):
 
         start_radians = ordered[0] * 2*pi
         end_radians = ordered[1] * 2*pi
-        x0 = center.x + radius*cos(start_radians)
-        y0 = center.y - radius*sin(start_radians)
+        x0 = circle.center.x + circle.radius*cos(start_radians)
+        y0 = circle.center.y - circle.radius*sin(start_radians)
         x0, y0 = self._scale((x0, y0))
         
-        x1 = center.x + radius*cos(end_radians)
-        y1 = center.y - radius*sin(end_radians)
+        x1 = circle.center.x + circle.radius*cos(end_radians)
+        y1 = circle.center.y - circle.radius*sin(end_radians)
         x1, y1 = self._scale((x1, y1))
 
         m0 = round(x0, 2)
         n0 = round(y0, 2)
-        r = round(self._scale(radius), 2)
+        r = round(self._scale(circle.radius), 2)
         m1 = round((x1 - x0), 2)
         n1 = round((y1 - y0), 2)
         dstr = "M {0},{1} a {2},{2} 0 {3},{4} {5},{6}".format(m0, n0,

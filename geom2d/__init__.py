@@ -199,18 +199,15 @@ class Plane(object):
     def height(self):
         return self._height
 
-    def draw_point(self, point, color):
-        pass
-
     def draw_line(self, start, end, color):
         pass
 
     def draw_circle(self, circle, color):
         pass
 
-    # start and end are normalized angles on the unit interval
+    # start and extent are normalized angles on the unit interval
     # moving in an anticlockwise direction
-    def draw_arc(self, center, radius, start, end, color):
+    def draw_circle_arc(self, circle, start, extend, color):
         pass
 
 
